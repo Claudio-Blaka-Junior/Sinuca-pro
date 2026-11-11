@@ -101,8 +101,8 @@ h1.title span{display:block;font-size:.5em;letter-spacing:.5em;background:linear
 </div>
 <div id="end"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script&gt;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script&gt;
 <script>
 (function(){
 const R=0.3, HX=13, HZ=6.5, PULL_MAX=5, GAP=0.2, PR=0.85; // PR = raio das caçapas
@@ -373,6 +373,10 @@ function updateHud(m){
 }
 function startGame(c){
   cpu=c;ov.style.display='none';bgOn=false;started=true;
+  // zera tudo para começar parado
+  hasMouse=false;yaw=0;camYaw=0;pull=0;off=GAP;state='aim';trans=0;
+  balls.forEach(b=>{b.body.velocity.set(0,0,0);b.body.angularVelocity.set(0,0,0);});
+  clock.getDelta();
   curCueIdx=-1;updateHud('Lisas (1–7) contra listradas (9–15). Boa sorte!');
 }
 document.getElementById('b1').onclick=()=>startGame(true);
@@ -547,6 +551,7 @@ const clock=new THREE.Clock();
 function loop(){
   requestAnimationFrame(loop);
   const dt=Math.min(clock.getDelta(),1/30);
+  if(!started){renderer.render(scene,camera);return;}   // nada se mexe antes de começar
   world.step(1/180,dt,8);
   if(cpu&&cur===1&&!over&&started)cpuTick(dt);
   else if(humanTurn()&&state==='aim'&&hasMouse)aimFromMouse();
